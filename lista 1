@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <vector>
 #include <map>
+// vou usar variaveis em ingles e alguns comentarios para postar depois no stackflow
 
 #include <TROOT.h>
 #include <TApplication.h>
@@ -29,7 +30,7 @@ const int ntuple=5;
 vector < array < double,ntuple > > dataID;//usei aq a array de c++ 11 jaq  nao posso criar um vetor tradional de array  double[5].
 double CredibleInterval=0.68;
 
-double SignalToNoise(double PC, double DR, double E, double n[dimNoise], double s[dimSignal]){//Energy should be in MeV and DR in kHz
+double SignalToNoise(double PC, double DR, double E, double n[dimNoise], double s[dimSignal]){
   double PEperMeV=8;//For the 20% PC case.
   double signalHits=PEperMeV*E*(PC/20.);
   double noiseHits=250*(PC/20.)*(DR/8.4);//PC*1e3*DR*1e3/(1.5e-6);//For the 20% PC case, 8.4 kHz.
@@ -164,16 +165,16 @@ void minuitLikelihood(int& nDim, double * gout, double & RMS, double par[], int 
 
 void minimizeNoise(double n[dimNoise], double s[dimSignal]){
   
-  TFitter * minimizer = new TFitter(dimNoise+dimSignal+1);//4=nb de params?
+  TFitter * minimizer = new TFitter(dimNoise+dimSignal+1);
   TMinuit * minuit = minimizer->GetMinuit();
   double arglist[20];
   int err=0;
   double p1=1;
-  minimizer->ExecuteCommand("SET PRINTOUT",&p1,1);//quiet mode
+  minimizer->ExecuteCommand("SET PRINTOUT",&p1,1);
   minuit->SetErrorDef(1);
   arglist[0]=2;
-  minuit->mnexcm("SET STR",arglist,1,err);//set strategy sets the number of derivative estimated. in the present case (2), this is the highest number of it with a counter-balance: very slow!
-  minimizer->SetFCN(minuitLikelihood);//here is function to minimize
+  minuit->mnexcm("SET STR",arglist,1,err)
+  minimizer->SetFCN(minuitLikelihood);//funçao para minimizar
 
   double Mig[2]={3e4,1e-6};//maxcalls and tolerance
   double Imp2[1]={10000};
@@ -571,7 +572,7 @@ int vertexResolution(double energy, double vertex_resolution, double efficiency,
       hvertexLongitudinalXTime->Fill(TMath::Abs(vector_director_longitudinal),lf_vertex[3]-mc_vertex[3]);
 
       //######################################################################################################
-      // Vertex resolution vs dwall and towall
+      
       //######################################################################################################
       hvertexXdwall->Fill(vertex_distance,dwall);
       hvertexXtowall->Fill(vertex_distance,towall);
